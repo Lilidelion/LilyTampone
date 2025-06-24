@@ -1,85 +1,77 @@
-import React, { useState } from 'react';
-import { Button, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-type Medicine = {
-  id: string;
-  name: string;
-  dosage: string;
-};
-
-export default function Page() {
-  const [medicines, setMedicines] = useState<Medicine[]>([]);
-  const [name, setName] = useState('');
-  const [dosage, setDosage] = useState('');
-
-  const addMedicine = () => {
-    if (!name.trim() || !dosage.trim()) return;
-
-    const newMedicine: Medicine = {
-      id: Date.now().toString(),
-      name,
-      dosage,
-    };
-    setMedicines([...medicines, newMedicine]);
-    setName('');
-    setDosage('');
-  };
-
-  const deleteMedicine = (id: string) => {
-    setMedicines(medicines.filter(med => med.id !== id));
-  };
+export default function StockScreen() {
+  const indexes = [
+    'SET', 'S&P', 'NASDAQ',
+    'Dow Jones', 'Shanghai', 'Nikkei',
+    'Hang Song', 'TSEC', 'EURO'
+  ];
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Quản Lý Thuốc</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.setContainer}>
+        <Text style={styles.indexTitle}>SET</Text>
+        <Text style={styles.indexValue}>9,999.99</Text>
+        <Text style={styles.indexChange}>+115.23 (0.56%)</Text>
+      </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Tên thuốc"
-        value={name}
-        onChangeText={setName}
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Liều dùng"
-        value={dosage}
-        onChangeText={setDosage}
-      />
-
-      <Button title="Thêm thuốc" onPress={addMedicine} />
-
-      <FlatList
-        data={medicines}
-        keyExtractor={(item) => item.id}
-        style={{ marginTop: 20 }}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <View>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemDosage}>Liều dùng: {item.dosage}</Text>
-            </View>
-            <TouchableOpacity onPress={() => deleteMedicine(item.id)}>
-              <Text style={styles.deleteBtn}>🗑️</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
-    </View>
+      <View style={styles.buttonContainer}>
+        {indexes.map((item, index) => (
+          <TouchableOpacity key={index} style={styles.button}>
+            <Text style={styles.buttonText}>{item}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' },
-  input: {
-    borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 10, borderRadius: 6,
+  container: {
+    flexGrow: 1,
+    backgroundColor: '#ffc0cb', // hồng
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40
   },
-  item: {
-    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    backgroundColor: '#f0f0f0', padding: 10, marginBottom: 10, borderRadius: 6,
+  setContainer: {
+    backgroundColor: '#ffff00', // vàng
+    width: '90%',
+    alignItems: 'center',
+    paddingVertical: 30,
+    marginBottom: 30,
+    borderRadius: 10
   },
-  itemName: { fontSize: 16, fontWeight: 'bold' },
-  itemDosage: { fontSize: 14, color: '#666' },
-  deleteBtn: { fontSize: 20, color: 'red' },
+  indexTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10
+  },
+  indexValue: {
+    fontSize: 48,
+    fontWeight: 'bold'
+  },
+  indexChange: {
+    fontSize: 20,
+    marginTop: 30
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center'
+  },
+  button: {
+    backgroundColor: '#d3d3d3',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    margin: 8,
+    borderRadius: 10,
+    width: 100,
+    alignItems: 'center'
+  },
+  buttonText: {
+    fontSize: 14,
+    fontWeight: 'bold'
+  }
 });
